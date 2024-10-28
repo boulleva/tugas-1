@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'home_screen.dart';
+import 'register_menu.dart';
 
 class LoginMenu extends StatefulWidget {
   @override
@@ -9,12 +10,12 @@ class LoginMenu extends StatefulWidget {
 class _LoginMenuState extends State<LoginMenu> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String validUsername = 'admin';
-  String validPassword = 'admin123';
+  String? registeredUsername;
+  String? registeredPassword;
 
   void _login() {
-    if (_usernameController.text == validUsername &&
-        _passwordController.text == validPassword) {
+    if (_usernameController.text == registeredUsername &&
+        _passwordController.text == registeredPassword) {
       Navigator.push(
         context,
         MaterialPageRoute(
@@ -25,6 +26,21 @@ class _LoginMenuState extends State<LoginMenu> {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text('Invalid username or password!'),
       ));
+    }
+  }
+
+  void _navigateToRegister() async {
+    final result = await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegisterMenu(),
+      ),
+    );
+    if (result != null) {
+      setState(() {
+        registeredUsername = result['username'];
+        registeredPassword = result['password'];
+      });
     }
   }
 
@@ -52,6 +68,10 @@ class _LoginMenuState extends State<LoginMenu> {
             ElevatedButton(
               onPressed: _login,
               child: Text('Login'),
+            ),
+            TextButton(
+              onPressed: _navigateToRegister,
+              child: Text('Register'),
             ),
           ],
         ),
